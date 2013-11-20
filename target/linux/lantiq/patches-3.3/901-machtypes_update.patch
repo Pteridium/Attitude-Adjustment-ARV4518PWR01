@@ -1,0 +1,11 @@
+diff -urN a/arch/mips/lantiq/machtypes.h b/arch/mips/lantiq/machtypes.h
+--- a/arch/mips/lantiq/machtypes.h	2013-11-19 17:18:36.000000000 +0100
++++ b/arch/mips/lantiq/machtypes.h	2013-11-19 17:32:54.000000000 +0100
+@@ -35,6 +35,7 @@
+ 	LANTIQ_MACH_ARV3527P,		/* Arcor easybox a401 */
+ 	LANTIQ_MACH_ARV4510PW,		/* Wippies Homebox */
+ 	LANTIQ_MACH_ARV4518PW,		/* Airties WAV-221, SMC-7908A-ISP */
++	LANTIQ_MACH_ARV4518PWRW01,	/* SMC-7908A-ISP */
+ 	LANTIQ_MACH_ARV4519PW,		/* Vodafone, Pirelli */
+ 	LANTIQ_MACH_ARV4520PW,		/* Airties WAV-281, Arcor EasyboxA800 */
+ 	LANTIQ_MACH_ARV452CPW,		/* Arcor EasyboxA801 */
