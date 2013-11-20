@@ -51,6 +51,12 @@ ARV7518PW)
 	ucidef_set_led_netdev "internet" "internet" "soc:green:internet" "pppoe-wan"
 	ucidef_set_led_usbdev "usb" "USB" "soc:green:usb" "1-1"
 	;;
+
+ARV4518PW*)
+	ucidef_set_led_wlan "wifi" "wifi" "soc:green:wifi" "phy0radio"
+	ucidef_set_led_netdev "internet" "internet" "soc:green:internet" "pppoe-wan"
+	ucidef_set_led_usbdev "usb" "USB" "soc:green:usb" "1-1"
+	;;
 esac
 
 ucidef_commit_leds

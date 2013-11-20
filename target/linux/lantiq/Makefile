@@ -13,7 +13,7 @@ DEFAULT_SUBTARGET:=danube
 
 LINUX_VERSION:=3.3.8
 
-CFLAGS=-Os -pipe -mips32r2 -mtune=mips32r2 -fno-caller-saves
+CFLAGS=-Os -pipe -mips32r2 -mtune=34kc -mdsp -fno-caller-saves
 
 define Target/Description
 	Build firmware images for Lantiq SoC

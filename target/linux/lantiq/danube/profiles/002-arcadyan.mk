@@ -35,6 +35,19 @@ endef
 
 $(eval $(call Profile,ARV4518PW))
 
+define Profile/ARV4518PWR01
+  NAME:=ARV4518PWR01 - SMC7908A
+  PACKAGES:= kmod-usb-core kmod-usb-dwc-otg kmod-ledtrig-usbdev \
+	kmod-ath5k wpad-mini \
+	kmod-ltq-dsl-firmware-a-danube
+endef
+
+define Profile/ARV4518PWR01/Description
+	Package set optimized for the ARV4518PWR01
+endef
+
+$(eval $(call Profile,ARV4518PWR01))
+
 define Profile/ARV4519PW
   NAME:=ARV4519PW - Vodafone, Pirelli
   PACKAGES:= kmod-usb-core kmod-usb-dwc-otg kmod-ledtrig-usbdev \
