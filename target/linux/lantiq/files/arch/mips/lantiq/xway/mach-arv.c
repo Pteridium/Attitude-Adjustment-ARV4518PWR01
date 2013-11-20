@@ -449,7 +449,7 @@ arv_register_ath5k(unsigned int ath_addr, unsigned int mac_addr)
 			 * fw convered value to 0x82d4 so for now force to 0x67
 			 */
 			arv_ath5k_eeprom_data[i] &= 0x0000;
-			arv_ath5k_eeprom_data[i] |= 0x67;
+			arv_ath5k_eeprom_data[i] |= 0xff;
 		}
 	}
 }
@@ -467,7 +467,7 @@ arv_register_ath9k(unsigned int ath_addr, unsigned int mac_addr)
 		(void *)KSEG1ADDR(LTQ_FLASH_START + ath_addr), ATH9K_PLAT_EEP_MAX_WORDS);
 
 	// force regdomain to 0x67
-	arv_ath9k_eeprom_data[0x208>>1] = 0x67;
+	arv_ath9k_eeprom_data[0x208>>1] = 0xff;
 
 	// calculate new checksum
 	sum = arv_ath9k_eeprom_data[0x200>>1];
