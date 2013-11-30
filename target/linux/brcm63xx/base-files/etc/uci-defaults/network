@@ -27,6 +27,8 @@ NB6 |\
 SPW303V |\
 SPW500V |\
 V2110 |\
+96368M-1341N |\
+96368M-1541N |\
 96348W3)
 	ucidef_set_interface_lan "eth0"
 	;;
