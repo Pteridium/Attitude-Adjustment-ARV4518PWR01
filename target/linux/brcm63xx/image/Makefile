@@ -144,8 +144,9 @@ endef
 
 define Image/Build
 	dd if=$(KDIR)/root.$(1) of=$(BIN_DIR)/$(IMG_PREFIX)-root.$(1) bs=128k conv=sync
+ifeq ($(CONFIG_TARGET_brcm63xx_generic),y) 
 	# Various routers
-ifneq ($(CONFIG_BROKEN),)
+	ifneq ($(CONFIG_BROKEN),)
 	$(call Image/Build/CFE,$(1),96328avng,6328,96328avng-4M-flash-generic,,--pad 2)
 	$(call Image/Build/CFE,$(1),96328avng,6328,96328avng-8M-flash-generic,,--pad 4)
 	$(call Image/Build/CFE,$(1),96328avng,6328,96328avng-16M-flash-generic,,--pad 8)
@@ -155,7 +156,7 @@ ifneq ($(CONFIG_BROKEN),)
 	$(call Image/Build/CFE,$(1),96345GW2,6345,96345GW2-generic)
 	$(call Image/Build/CFE,$(1),96345GW2,6345,96348GW2-bc221,,--layoutver 5)
 	$(call Image/Build/CFE,$(1),96345GW2,6345,92345GW2-rev,OpenWRT-$(REVISION))
-endif
+	endif
 	$(call Image/Build/CFE,$(1),96348GW,6348,96348GW-generic,,)
 	$(call Image/Build/CFE,$(1),96348R,6348,96348R-generic,,)
 	$(call Image/Build/CFE,$(1),96348GW,6348,96348GW-bc221,,--layoutver 5)
@@ -166,10 +167,10 @@ endif
 	$(call Image/Build/CFE,$(1),96348A-122,6348,96348A-122-generic)
 	$(call Image/Build/CFE,$(1),96358VW,6358,96358VW-generic)
 	$(call Image/Build/CFE,$(1),96358VW2,6358,96358VW2-generic)
-ifneq ($(CONFIG_BROKEN),)
+	ifneq ($(CONFIG_BROKEN),)
 	# $(call Image/Build/CFE,$(1),96368MVNgr,6368,96368MVNgr-generic)
 	# $(call Image/Build/CFE,$(1),96368MVWG,6368,96368MVWG-generic)
-endif
+	endif
 
 	# BT Voyager V210_BTR
 	$(call Image/Build/CFE,$(1),V210_BB,6348,BTV210_BTR,,--layoutver 5)
@@ -196,9 +197,9 @@ endif
 	# Neufbox4
 	$(call Image/Build/CFE,$(1),96358VW,6358,NEUFBOX4,OpenWRT-$(REVISION))
 	# Neufbox6
-ifneq ($(CONFIG_BROKEN),)
+	ifneq ($(CONFIG_BROKEN),)
 	$(call Image/Build/CFE,$(1),NB6-SER-r0,6362,NEUFBOX6,OpenWRT-$(REVISION))
-endif
+	endif
 	# Comtrend 6373
 	$(call Image/Build/CFE,$(1),CT6373-1,6358,CT6373)
 	# Comtrend 536, 5621
@@ -260,6 +261,13 @@ endif
 
 	# T-Com Speedport W 303V Typ B
 	$(call Image/Build/SPW303V,$(1),96358-502V,6358,SPW303V)
+endif 
+	# Comtrend VR-3025un
+	$(call Image/Build/CFE,$(1),96368M-1341N,6368,VR-3025un,,--pad 4)
+
+	# Comtrend VR-3025u
+	$(call Image/Build/CFE,$(1),96368M-1541N,6368,VR-3025u,,--pad 16)
+
 endef
 
 $(eval $(call BuildImage))
