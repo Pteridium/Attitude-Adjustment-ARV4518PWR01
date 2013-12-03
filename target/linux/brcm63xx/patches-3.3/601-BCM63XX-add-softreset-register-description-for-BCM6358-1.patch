@@ -1,0 +1,27 @@
+diff -urN a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
+--- a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h	2013-12-03 11:15:54.000000000 +0100
++++ b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h	2013-12-03 11:34:22.712858577 +0100
+@@ -227,6 +227,7 @@
+ /* Soft Reset register */
+ #define PERF_SOFTRESET_REG		0x28
+ #define PERF_SOFTRESET_6328_REG		0x10
++#define PERF_SOFTRESET_6358_REG		0x34
+ #define PERF_SOFTRESET_6362_REG		0x10
+ #define PERF_SOFTRESET_6368_REG		0x10
+ 
+@@ -281,6 +282,15 @@
+ 				  SOFTRESET_6348_ACLC_MASK |		\
+ 				  SOFTRESET_6348_ADSLMIPSPLL_MASK)
+ 
++#define SOFTRESET_6358_SPI_MASK		(1 << 0)
++#define SOFTRESET_6358_ENET_MASK	(1 << 2)
++#define SOFTRESET_6358_MPI_MASK		(1 << 3)
++#define SOFTRESET_6358_EPHY_MASK	(1 << 6)
++#define SOFTRESET_6358_SAR_MASK		(1 << 7)
++#define SOFTRESET_6358_USBH_MASK	(1 << 12)
++#define SOFTRESET_6358_PCM_MASK		(1 << 13)
++#define SOFTRESET_6358_ADSL_MASK	(1 << 14)
++
+ #define SOFTRESET_6362_SPI_MASK		(1 << 0)
+ #define SOFTRESET_6362_IPSEC_MASK	(1 << 1)
+ #define SOFTRESET_6362_EPHY_MASK	(1 << 2)
