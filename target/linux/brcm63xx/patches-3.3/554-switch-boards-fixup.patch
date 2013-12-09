@@ -1,0 +1,298 @@
+diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-07 20:19:31.000000000 +0100
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-07 21:25:41.773302112 +0100
+@@ -322,6 +322,8 @@
+ 	.has_uart0			= 1,
+ 	.has_enet0			= 1,
+ 	.enet0 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -365,6 +367,8 @@
+ 	.has_uart0			= 1,
+ 	.has_enet0			= 1,
+ 	.enet0 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -406,6 +410,8 @@
+ 	.has_enet0			= 1,
+ 
+ 	.enet0 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -439,6 +445,8 @@
+ 	.has_enet0			= 1,
+ 
+ 	.enet0 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -494,6 +502,8 @@
+ 	.has_pci			= 1,
+ 
+ 	.enet0 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.has_phy		= 1,
+ 		.use_internal_phy	= 1,
+ 	},
+@@ -539,10 +549,14 @@
+ 	.has_pci			= 1,
+ 
+ 	.enet0 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.has_phy		= 1,
+ 		.use_internal_phy	= 1,
+ 	},
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -615,6 +629,8 @@
+ 	},
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -675,6 +691,8 @@
+ 	.has_pci			= 1,
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -730,6 +748,8 @@
+ 	.has_pci			= 1,
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -772,6 +792,8 @@
+ 	.has_pci			= 1,
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -838,6 +860,8 @@
+ 		.use_internal_phy	= 1,
+ 	},
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -906,6 +930,8 @@
+ 		.use_internal_phy	= 1,
+ 	},
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -968,6 +994,8 @@
+ 		.use_internal_phy	= 1,
+ 	},
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1013,6 +1041,8 @@
+ 	},
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1036,6 +1066,8 @@
+ 		.use_internal_phy	= 1,
+ 	},
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1057,6 +1089,8 @@
+ 		.use_internal_phy	= 1,
+ 	},
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1076,6 +1110,8 @@
+ 		.use_internal_phy	= 1,
+ 	},
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1105,6 +1141,8 @@
+ 	.has_uart0 			= 1,
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1153,6 +1191,8 @@
+ 	.has_pci			= 1,
+ 
+ 	.enet0 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.has_phy		= 1,
+ 		.use_internal_phy	= 1,
+ 	},
+@@ -1219,7 +1259,8 @@
+ 		.use_internal_phy	= 1,
+ 	},
+ 	.enet1 = {
+-		/* it has BP_ENET_EXTERNAL_PHY */
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1289,6 +1330,8 @@
+                 .use_internal_phy       = 1,
+         },
+         .enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+                 .force_speed_100        = 1,
+                 .force_duplex_full      = 1,
+ 	},
+@@ -1346,6 +1389,8 @@
+ 		.use_internal_phy	= 1,
+ 	},
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1379,6 +1424,8 @@
+ 	.has_pci			= 1,
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1441,6 +1488,8 @@
+ 	},
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1493,6 +1542,8 @@
+ 	},
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1535,6 +1586,8 @@
+ 	.has_pci                        = 1,
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100        = 1,
+ 		.force_duplex_full      = 1,
+  	},
+@@ -1631,6 +1684,8 @@
+ 	},
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100        = 1,
+ 		.force_duplex_full      = 1,
+ 	},
+@@ -1748,6 +1803,8 @@
+ 	},
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -1766,6 +1823,8 @@
+ 	.has_pci			= 1,
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -2435,6 +2494,8 @@
+ 
+ 	.has_enet1			= 1,
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},
+@@ -2510,6 +2571,8 @@
+ 	},
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100        = 1,
+ 		.force_duplex_full      = 1,
+ 	},
+@@ -2652,6 +2715,8 @@
+ 	},
+ 
+ 	.enet1 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.force_speed_100	= 1,
+ 		.force_duplex_full	= 1,
+ 	},

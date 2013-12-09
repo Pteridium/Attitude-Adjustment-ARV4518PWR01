@@ -1,0 +1,466 @@
+diff -urN a/arch/mips/bcm63xx/irq.c b/arch/mips/bcm63xx/irq.c
+--- a/arch/mips/bcm63xx/irq.c	2013-11-24 13:24:15.000000000 +0100
++++ b/arch/mips/bcm63xx/irq.c	2013-11-25 19:05:05.130551827 +0100
+@@ -291,6 +291,10 @@
+ 
+ 		if (cause & CAUSEF_IP7)
+ 			do_IRQ(7);
++		if (cause & CAUSEF_IP0)
++			do_IRQ(0);
++		if (cause & CAUSEF_IP1)
++			do_IRQ(1);
+ 		if (cause & CAUSEF_IP2)
+ 			dispatch_internal();
+ 		if (!is_ext_irq_cascaded) {
+diff -urN a/arch/mips/bcm63xx/Makefile b/arch/mips/bcm63xx/Makefile
+--- a/arch/mips/bcm63xx/Makefile	2013-11-24 13:24:16.000000000 +0100
++++ b/arch/mips/bcm63xx/Makefile	2013-11-25 19:08:46.239137977 +0100
+@@ -1,4 +1,4 @@
+-obj-y		+= clk.o cpu.o cs.o gpio.o irq.o nvram.o prom.o setup.o \
++obj-y		+= clk.o cpu.o cs.o gpio.o irq.o nvram.o prom.o reset.o setup.o \
+ 		   timer.o dev-dsp.o dev-enet.o dev-flash.o dev-hsspi.o \
+ 		   dev-pcmcia.o dev-rng.o dev-spi.o dev-uart.o dev-usb-ehci.o \
+ 		   dev-usb-ohci.o dev-wdt.o pci-ath9k-fixup.o
+diff -urN a/arch/mips/bcm63xx/prom.c b/arch/mips/bcm63xx/prom.c
+--- a/arch/mips/bcm63xx/prom.c	2013-11-24 13:24:15.000000000 +0100
++++ b/arch/mips/bcm63xx/prom.c	2013-11-25 19:02:47.342185323 +0100
+@@ -8,7 +8,11 @@
+ 
+ #include <linux/init.h>
+ #include <linux/bootmem.h>
++#include <linux/smp.h>
+ #include <asm/bootinfo.h>
++#include <asm/bmips.h>
++#include <asm/smp-ops.h>
++#include <asm/mipsregs.h>
+ #include <bcm63xx_board.h>
+ #include <bcm63xx_cpu.h>
+ #include <bcm63xx_io.h>
+@@ -52,6 +56,43 @@
+ 
+ 	/* do low level board init */
+ 	board_prom_init();
++
++	if (IS_ENABLED(CONFIG_CPU_BMIPS4350) && IS_ENABLED(CONFIG_SMP)) {
++		/* set up SMP */
++		register_smp_ops(&bmips_smp_ops);
++
++		/*
++		 * BCM6328 might not have its second CPU enabled, while BCM6358
++		 * needs special handling for its shared TLB, so disable SMP
++		 * for now.
++		 */
++		if (BCMCPU_IS_6328()) {
++			bmips_smp_enabled = 0;
++		} else if (BCMCPU_IS_6358()) {
++			bmips_smp_enabled = 0;
++		}
++
++		if (!bmips_smp_enabled)
++			return;
++
++		/*
++		 * The bootloader has set up the CPU1 reset vector at
++		 * 0xa000_0200.
++		 * This conflicts with the special interrupt vector (IV).
++		 * The bootloader has also set up CPU1 to respond to the wrong
++		 * IPI interrupt.
++		 * Here we will start up CPU1 in the background and ask it to
++		 * reconfigure itself then go back to sleep.
++		 */
++		memcpy((void *)0xa0000200, &bmips_smp_movevec, 0x20);
++		__sync();
++		set_c0_cause(C_SW0);
++		cpumask_set_cpu(1, &bmips_booted_mask);
++
++		/*
++		 * FIXME: we really should have some sort of hazard barrier here
++		 */
++	}
+ }
+ 
+ void __init prom_free_prom_memory(void)
+diff -urN a/arch/mips/bcm63xx/reset.c b/arch/mips/bcm63xx/reset.c
+--- a/arch/mips/bcm63xx/reset.c	1970-01-01 01:00:00.000000000 +0100
++++ b/arch/mips/bcm63xx/reset.c	2013-11-25 19:12:24.251713617 +0100
+@@ -0,0 +1,223 @@
++/*
++ * This file is subject to the terms and conditions of the GNU General Public
++ * License.  See the file "COPYING" in the main directory of this archive
++ * for more details.
++ *
++ * Copyright (C) 2012 Jonas Gorski <jonas.gorski@gmail.com>
++ */
++
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/err.h>
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <bcm63xx_cpu.h>
++#include <bcm63xx_io.h>
++#include <bcm63xx_regs.h>
++#include <bcm63xx_reset.h>
++
++#define __GEN_RESET_BITS_TABLE(__cpu)					\
++	[BCM63XX_RESET_SPI]		= BCM## __cpu ##_RESET_SPI,	\
++	[BCM63XX_RESET_ENET]		= BCM## __cpu ##_RESET_ENET,	\
++	[BCM63XX_RESET_USBH]		= BCM## __cpu ##_RESET_USBH,	\
++	[BCM63XX_RESET_USBD]		= BCM## __cpu ##_RESET_USBD,	\
++	[BCM63XX_RESET_DSL]		= BCM## __cpu ##_RESET_DSL,	\
++	[BCM63XX_RESET_SAR]		= BCM## __cpu ##_RESET_SAR,	\
++	[BCM63XX_RESET_EPHY]		= BCM## __cpu ##_RESET_EPHY,	\
++	[BCM63XX_RESET_ENETSW]		= BCM## __cpu ##_RESET_ENETSW,	\
++	[BCM63XX_RESET_PCM]		= BCM## __cpu ##_RESET_PCM,	\
++	[BCM63XX_RESET_MPI]		= BCM## __cpu ##_RESET_MPI,	\
++	[BCM63XX_RESET_PCIE]		= BCM## __cpu ##_RESET_PCIE,	\
++	[BCM63XX_RESET_PCIE_EXT]	= BCM## __cpu ##_RESET_PCIE_EXT,
++
++#define BCM6328_RESET_SPI	SOFTRESET_6328_SPI_MASK
++#define BCM6328_RESET_ENET	0
++#define BCM6328_RESET_USBH	SOFTRESET_6328_USBH_MASK
++#define BCM6328_RESET_USBD	SOFTRESET_6328_USBS_MASK
++#define BCM6328_RESET_DSL	0
++#define BCM6328_RESET_SAR	SOFTRESET_6328_SAR_MASK
++#define BCM6328_RESET_EPHY	SOFTRESET_6328_EPHY_MASK
++#define BCM6328_RESET_ENETSW	SOFTRESET_6328_ENETSW_MASK
++#define BCM6328_RESET_PCM	SOFTRESET_6328_PCM_MASK
++#define BCM6328_RESET_MPI	0
++#define BCM6328_RESET_PCIE	\
++				(SOFTRESET_6328_PCIE_MASK |		\
++				 SOFTRESET_6328_PCIE_CORE_MASK |	\
++				 SOFTRESET_6328_PCIE_HARD_MASK)
++#define BCM6328_RESET_PCIE_EXT	SOFTRESET_6328_PCIE_EXT_MASK
++
++#define BCM6338_RESET_SPI	SOFTRESET_6338_SPI_MASK
++#define BCM6338_RESET_ENET	SOFTRESET_6338_ENET_MASK
++#define BCM6338_RESET_USBH	SOFTRESET_6338_USBH_MASK
++#define BCM6338_RESET_USBD	SOFTRESET_6338_USBS_MASK
++#define BCM6338_RESET_DSL	SOFTRESET_6338_ADSL_MASK
++#define BCM6338_RESET_SAR	SOFTRESET_6338_SAR_MASK
++#define BCM6338_RESET_EPHY	0
++#define BCM6338_RESET_ENETSW	0
++#define BCM6338_RESET_PCM	0
++#define BCM6338_RESET_MPI	0
++#define BCM6338_RESET_PCIE	0
++#define BCM6338_RESET_PCIE_EXT	0
++
++#define BCM6348_RESET_SPI	SOFTRESET_6348_SPI_MASK
++#define BCM6348_RESET_ENET	SOFTRESET_6348_ENET_MASK
++#define BCM6348_RESET_USBH	SOFTRESET_6348_USBH_MASK
++#define BCM6348_RESET_USBD	SOFTRESET_6348_USBS_MASK
++#define BCM6348_RESET_DSL	SOFTRESET_6348_ADSL_MASK
++#define BCM6348_RESET_SAR	SOFTRESET_6348_SAR_MASK
++#define BCM6348_RESET_EPHY	0
++#define BCM6348_RESET_ENETSW	0
++#define BCM6348_RESET_PCM	0
++#define BCM6348_RESET_MPI	0
++#define BCM6348_RESET_PCIE	0
++#define BCM6348_RESET_PCIE_EXT	0
++
++#define BCM6358_RESET_SPI	SOFTRESET_6358_SPI_MASK
++#define BCM6358_RESET_ENET	SOFTRESET_6358_ENET_MASK
++#define BCM6358_RESET_USBH	SOFTRESET_6358_USBH_MASK
++#define BCM6358_RESET_USBD	0
++#define BCM6358_RESET_DSL	SOFTRESET_6358_ADSL_MASK
++#define BCM6358_RESET_SAR	SOFTRESET_6358_SAR_MASK
++#define BCM6358_RESET_EPHY	SOFTRESET_6358_EPHY_MASK
++#define BCM6358_RESET_ENETSW	0
++#define BCM6358_RESET_PCM	SOFTRESET_6358_PCM_MASK
++#define BCM6358_RESET_MPI	SOFTRESET_6358_MPI_MASK
++#define BCM6358_RESET_PCIE	0
++#define BCM6358_RESET_PCIE_EXT	0
++
++#define BCM6368_RESET_SPI	SOFTRESET_6368_SPI_MASK
++#define BCM6368_RESET_ENET	0
++#define BCM6368_RESET_USBH	SOFTRESET_6368_USBH_MASK
++#define BCM6368_RESET_USBD	SOFTRESET_6368_USBS_MASK
++#define BCM6368_RESET_DSL	0
++#define BCM6368_RESET_SAR	SOFTRESET_6368_SAR_MASK
++#define BCM6368_RESET_EPHY	SOFTRESET_6368_EPHY_MASK
++#define BCM6368_RESET_ENETSW	0
++#define BCM6368_RESET_PCM	SOFTRESET_6368_PCM_MASK
++#define BCM6368_RESET_MPI	SOFTRESET_6368_MPI_MASK
++#define BCM6368_RESET_PCIE	0
++#define BCM6368_RESET_PCIE_EXT	0
++
++#ifdef BCMCPU_RUNTIME_DETECT
++
++/*
++ * core reset bits
++ */
++static const u32 bcm6328_reset_bits[] = {
++	__GEN_RESET_BITS_TABLE(6328)
++};
++
++static const u32 bcm6338_reset_bits[] = {
++	__GEN_RESET_BITS_TABLE(6338)
++};
++
++static const u32 bcm6348_reset_bits[] = {
++	__GEN_RESET_BITS_TABLE(6348)
++};
++
++static const u32 bcm6358_reset_bits[] = {
++	__GEN_RESET_BITS_TABLE(6358)
++};
++
++static const u32 bcm6368_reset_bits[] = {
++	__GEN_RESET_BITS_TABLE(6368)
++};
++
++const u32 *bcm63xx_reset_bits;
++static int reset_reg;
++
++static int __init bcm63xx_reset_bits_init(void)
++{
++	if (BCMCPU_IS_6328()) {
++		reset_reg = PERF_SOFTRESET_6328_REG;
++		bcm63xx_reset_bits = bcm6328_reset_bits;
++	} else if (BCMCPU_IS_6338()) {
++		reset_reg = PERF_SOFTRESET_REG;
++		bcm63xx_reset_bits = bcm6338_reset_bits;
++	} else if (BCMCPU_IS_6348()) {
++		reset_reg = PERF_SOFTRESET_REG;
++		bcm63xx_reset_bits = bcm6348_reset_bits;
++	} else if (BCMCPU_IS_6358()) {
++		reset_reg = PERF_SOFTRESET_6358_REG;
++		bcm63xx_reset_bits = bcm6358_reset_bits;
++	} else if (BCMCPU_IS_6368()) {
++		reset_reg = PERF_SOFTRESET_6368_REG;
++		bcm63xx_reset_bits = bcm6368_reset_bits;
++	}
++
++	return 0;
++}
++#else
++
++#ifdef CONFIG_BCM63XX_CPU_6328
++static const u32 bcm63xx_reset_bits[] = {
++	__GEN_RESET_BITS_TABLE(6328)
++};
++#define reset_reg PERF_SOFTRESET_6328_REG
++#endif
++
++#ifdef CONFIG_BCM63XX_CPU_6338
++static const u32 bcm63xx_reset_bits[] = {
++	__GEN_RESET_BITS_TABLE(6338)
++};
++#define reset_reg PERF_SOFTRESET_REG
++#endif
++
++#ifdef CONFIG_BCM63XX_CPU_6345
++static const u32 bcm63xx_reset_bits[] = { };
++#define reset_reg 0
++#endif
++
++#ifdef CONFIG_BCM63XX_CPU_6348
++static const u32 bcm63xx_reset_bits[] = {
++	__GEN_RESET_BITS_TABLE(6348)
++};
++#define reset_reg PERF_SOFTRESET_REG
++#endif
++
++#ifdef CONFIG_BCM63XX_CPU_6358
++static const u32 bcm63xx_reset_bits[] = {
++	__GEN_RESET_BITS_TABLE(6358)
++};
++#define reset_reg PERF_SOFTRESET_6358_REG
++#endif
++
++#ifdef CONFIG_BCM63XX_CPU_6368
++static const u32 bcm63xx_reset_bits[] = {
++	__GEN_RESET_BITS_TABLE(6368)
++};
++#define reset_reg PERF_SOFTRESET_6368_REG
++#endif
++
++static int __init bcm63xx_reset_bits_init(void) { return 0; }
++#endif
++
++static DEFINE_SPINLOCK(reset_mutex);
++
++static void __bcm63xx_core_set_reset(u32 mask, int enable)
++{
++	unsigned long flags;
++	u32 val;
++
++	if (!mask)
++		return;
++
++	spin_lock_irqsave(&reset_mutex, flags);
++	val = bcm_perf_readl(reset_reg);
++
++	if (enable)
++		val &= ~mask;
++	else
++		val |= mask;
++
++	bcm_perf_writel(val, reset_reg);
++	spin_unlock_irqrestore(&reset_mutex, flags);
++}
++
++void bcm63xx_core_set_reset(enum bcm63xx_core_reset core, int reset)
++{
++	__bcm63xx_core_set_reset(bcm63xx_reset_bits[core], reset);
++}
++EXPORT_SYMBOL(bcm63xx_core_set_reset);
++
++postcore_initcall(bcm63xx_reset_bits_init);
+diff -urN a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_reset.h b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_reset.h
+--- a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_reset.h	1970-01-01 01:00:00.000000000 +0100
++++ b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_reset.h	2013-11-25 19:13:57.579959370 +0100
+@@ -0,0 +1,21 @@
++#ifndef __BCM63XX_RESET_H
++#define __BCM63XX_RESET_H
++
++enum bcm63xx_core_reset {
++	BCM63XX_RESET_SPI,
++	BCM63XX_RESET_ENET,
++	BCM63XX_RESET_USBH,
++	BCM63XX_RESET_USBD,
++	BCM63XX_RESET_SAR,
++	BCM63XX_RESET_DSL,
++	BCM63XX_RESET_EPHY,
++	BCM63XX_RESET_ENETSW,
++	BCM63XX_RESET_PCM,
++	BCM63XX_RESET_MPI,
++	BCM63XX_RESET_PCIE,
++	BCM63XX_RESET_PCIE_EXT,
++};
++
++void bcm63xx_core_set_reset(enum bcm63xx_core_reset, int reset);
++
++#endif
+diff -urN a/arch/mips/include/asm/module.h b/arch/mips/include/asm/module.h
+--- a/arch/mips/include/asm/module.h	2013-11-24 13:24:10.000000000 +0100
++++ b/arch/mips/include/asm/module.h	2013-11-25 18:32:32.517304243 +0100
+@@ -127,6 +127,8 @@
+ #define MODULE_PROC_FAMILY "OCTEON "
+ #elif defined CONFIG_CPU_XLR
+ #define MODULE_PROC_FAMILY "XLR "
++#elif defined CONFIG_CPU_BMIPS
++#define MODULE_PROC_FAMILY "BMIPS "
+ #elif defined CONFIG_CPU_XLP
+ #define MODULE_PROC_FAMILY "XLP "
+ #else
+diff -urN a/arch/mips/Kconfig b/arch/mips/Kconfig
+--- a/arch/mips/Kconfig	2013-11-24 13:24:14.000000000 +0100
++++ b/arch/mips/Kconfig	2013-11-25 18:55:34.769028104 +0100
+@@ -112,11 +112,14 @@
+ 	select DMA_NONCOHERENT
+ 	select IRQ_CPU
+ 	select SYS_HAS_CPU_MIPS32_R1
++	select SYS_HAS_CPU_BMIPS4350 if !BCM63XX_CPU_6338 && !BCM63XX_CPU_6345 && !BCM63XX_CPU_6348
++	select NR_CPUS_DEFAULT_2
+ 	select SYS_SUPPORTS_32BIT_KERNEL
+ 	select SYS_SUPPORTS_BIG_ENDIAN
+ 	select SYS_HAS_EARLY_PRINTK
+ 	select SWAP_IO_SPACE
+ 	select ARCH_REQUIRE_GPIOLIB
++	select HAVE_CLK
+ 	help
+ 	 Support for BCM63XX based boards
+ 
+diff -urN a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
+--- a/arch/mips/kernel/smp-bmips.c	2012-06-01 09:16:13.000000000 +0200
++++ b/arch/mips/kernel/smp-bmips.c	2013-11-25 18:53:49.356744495 +0100
+@@ -15,7 +15,6 @@
+ #include <linux/smp.h>
+ #include <linux/interrupt.h>
+ #include <linux/spinlock.h>
+-#include <linux/init.h>
+ #include <linux/cpu.h>
+ #include <linux/cpumask.h>
+ #include <linux/reboot.h>
+@@ -65,7 +64,7 @@
+ 
+ static void __init bmips_smp_setup(void)
+ {
+-	int i;
++	int i, cpu = 1, boot_cpu = 0;
+ 
+ #if defined(CONFIG_CPU_BMIPS4350) || defined(CONFIG_CPU_BMIPS4380)
+ 	/* arbitration priority */
+@@ -74,13 +73,22 @@
+ 	/* NBK and weak order flags */
+ 	set_c0_brcm_config_0(0x30000);
+ 
++	/* Find out if we are running on TP0 or TP1 */
++	boot_cpu = !!(read_c0_brcm_cmt_local() & (1 << 31));
++
+ 	/*
+ 	 * MIPS interrupts 0,1 (SW INT 0,1) cross over to the other thread
+ 	 * MIPS interrupt 2 (HW INT 0) is the CPU0 L1 controller output
+ 	 * MIPS interrupt 3 (HW INT 1) is the CPU1 L1 controller output
++	 *
++	 * If booting from TP1, leave the existing CMT interrupt routing
++	 * such that TP0 responds to SW1 and TP1 responds to SW0.
+ 	 */
+-	change_c0_brcm_cmt_intr(0xf8018000,
+-		(0x02 << 27) | (0x03 << 15));
++	if (boot_cpu == 0)
++		change_c0_brcm_cmt_intr(0xf8018000,
++					(0x02 << 27) | (0x03 << 15));
++	else
++		change_c0_brcm_cmt_intr(0xf8018000, (0x1d << 27));
+ 
+ 	/* single core, 2 threads (2 pipelines) */
+ 	max_cpus = 2;
+@@ -108,9 +116,15 @@
+ 	if (!board_ebase_setup)
+ 		board_ebase_setup = &bmips_ebase_setup;
+ 
++	__cpu_number_map[boot_cpu] = 0;
++	__cpu_logical_map[0] = boot_cpu;
++
+ 	for (i = 0; i < max_cpus; i++) {
+-		__cpu_number_map[i] = 1;
+-		__cpu_logical_map[i] = 1;
++		if (i != boot_cpu) {
++			__cpu_number_map[i] = cpu;
++			__cpu_logical_map[cpu] = i;
++			cpu++;
++		}
+ 		set_cpu_possible(i, 1);
+ 		set_cpu_present(i, 1);
+ 	}
+@@ -159,7 +173,9 @@
+ 		bmips_send_ipi_single(cpu, 0);
+ 	else {
+ #if defined(CONFIG_CPU_BMIPS4350) || defined(CONFIG_CPU_BMIPS4380)
+-		set_c0_brcm_cmt_ctrl(0x01);
++		/* Reset slave TP1 if booting from TP0 */
++		if (cpu_logical_map(cpu) == 1)
++			set_c0_brcm_cmt_ctrl(0x01);
+ #elif defined(CONFIG_CPU_BMIPS5000)
+ 		if (cpu & 0x01)
+ 			write_c0_brcm_action(ACTION_BOOT_THREAD(cpu));
+@@ -198,13 +214,6 @@
+ 
+ 	write_c0_brcm_action(ACTION_CLR_IPI(smp_processor_id(), 0));
+ #endif
+-
+-	/* make sure there won't be a timer interrupt for a little while */
+-	write_c0_compare(read_c0_count() + mips_hpt_frequency / HZ);
+-
+-	irq_enable_hazard();
+-	set_c0_status(IE_SW0 | IE_SW1 | IE_IRQ1 | IE_IRQ5 | ST0_IE);
+-	irq_enable_hazard();
+ }
+ 
+ /*
+@@ -213,6 +222,13 @@
+ static void bmips_smp_finish(void)
+ {
+ 	pr_info("SMP: CPU%d is running\n", smp_processor_id());
++
++	/* make sure there won't be a timer interrupt for a little while */
++	write_c0_compare(read_c0_count() + mips_hpt_frequency / HZ);
++
++	irq_enable_hazard();
++	set_c0_status(IE_SW0 | IE_SW1 | IE_IRQ1 | IE_IRQ5 | ST0_IE);
++	irq_enable_hazard();
+ }
+ 
+ /*

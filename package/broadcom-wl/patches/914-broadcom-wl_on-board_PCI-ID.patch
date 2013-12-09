@@ -1,0 +1,12 @@
+diff -urN a/driver/include/bcmdevs.h b/driver/include/bcmdevs.h
+--- a/driver/include/bcmdevs.h	2010-04-04 21:30:32.000000000 +0200
++++ b/driver/include/bcmdevs.h	2013-10-12 14:55:37.845802700 +0200
+@@ -81,6 +81,7 @@
+ #define BCM43222_D11N_ID	0x4350		/* 43222 802.11n dualband device */
+ #define BCM43222_D11N2G_ID	0x4351		/* 43222 802.11n 2.4GHz device */
+ #define BCM43222_D11N5G_ID	0x4352		/* 43222 802.11n 5GHz device */
++#define BCM43222_D11NINT2G_ID	0xa8d6		/* 43222 802.11n 2.4GHz on board device */
+ #define BCM43224_D11N_ID	0x4353		/* 43224 802.11n dualband device */
+ #define BCM43224_D11N2G_ID	0x4354		/* 43224 802.11n 2.4GHz device */
+ #define BCM43224_D11N5G_ID	0x4355		/* 43224 802.11n 5GHz device */
+

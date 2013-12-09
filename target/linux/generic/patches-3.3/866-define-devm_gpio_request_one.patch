@@ -1,0 +1,52 @@
+diff -urN a/drivers/gpio/devres.c b/drivers/gpio/devres.c
+--- a/drivers/gpio/devres.c	2012-06-01 09:16:13.000000000 +0200
++++ b/drivers/gpio/devres.c	2013-12-08 15:47:43.035505797 +0100
+@@ -71,6 +71,36 @@
+ EXPORT_SYMBOL(devm_gpio_request);
+ 
+ /**
++  *      devm_gpio_request_one - request a single GPIO with initial setup
++  *      @dev:   device to request for
++  *      @gpio:  the GPIO number
++  *      @flags: GPIO configuration as specified by GPIOF_*
++  *      @label: a literal description string of this GPIO
++  */
++int devm_gpio_request_one(struct device *dev, unsigned gpio,
++                          unsigned long flags, const char *label)
++{
++        unsigned *dr;
++        int rc;
++
++        dr = devres_alloc(devm_gpio_release, sizeof(unsigned), GFP_KERNEL);
++        if (!dr)
++                return -ENOMEM;
++ 
++        rc = gpio_request_one(gpio, flags, label);
++        if (rc) {
++                devres_free(dr);
++                return rc;
++        }
++
++        *dr = gpio;
++        devres_add(dev, dr);
++
++        return 0;
++}
++EXPORT_SYMBOL(devm_gpio_request_one);
++
++/**
+  *      devm_gpio_free - free an interrupt
+  *      @dev: device to free gpio for
+  *      @gpio: gpio to free
+diff -urN a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
+--- a/include/asm-generic/gpio.h	2013-12-08 15:48:41.127656416 +0100
++++ b/include/asm-generic/gpio.h	2013-12-08 15:42:20.000000000 +0100
+@@ -179,6 +179,8 @@
+ 
+ /* bindings for managed devices that want to request gpios */
+ int devm_gpio_request(struct device *dev, unsigned gpio, const char *label);
++int devm_gpio_request_one(struct device *dev, unsigned gpio,
++			  unsigned long flags, const char *label);
+ void devm_gpio_free(struct device *dev, unsigned int gpio);
+ 
+ #ifdef CONFIG_GPIO_SYSFS

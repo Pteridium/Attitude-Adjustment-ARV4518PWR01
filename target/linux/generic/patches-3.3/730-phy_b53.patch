@@ -1,0 +1,23 @@
+diff -urN a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+--- a/drivers/net/phy/Kconfig	2013-12-07 19:38:34.000000000 +0100
++++ b/drivers/net/phy/Kconfig	2013-12-07 19:42:04.458037734 +0100
+@@ -205,6 +205,8 @@
+ 
+ endif # RTL8366_SMI
+ 
++source "drivers/net/phy/b53/Kconfig"
++
+ endif # PHYLIB
+ 
+ config MICREL_KS8995MA
+diff -urN a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+--- a/drivers/net/phy/Makefile	2013-12-07 19:38:34.000000000 +0100
++++ b/drivers/net/phy/Makefile	2013-12-07 19:44:24.842525272 +0100
+@@ -30,6 +30,7 @@
+ obj-$(CONFIG_LSI_ET1011C_PHY)	+= et1011c.o
+ obj-$(CONFIG_MICREL_PHY)	+= micrel.o
+ obj-$(CONFIG_PSB6970_PHY)	+= psb6970.o
++obj-$(CONFIG_B53)		+= b53/
+ obj-$(CONFIG_FIXED_PHY)		+= fixed.o
+ obj-$(CONFIG_MDIO_BITBANG)	+= mdio-bitbang.o
+ obj-$(CONFIG_MDIO_GPIO)		+= mdio-gpio.o
