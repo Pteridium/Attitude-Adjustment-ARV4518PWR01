@@ -27,8 +27,6 @@ arch/mips/mm/Makefile     |    4 +--
  3 files changed, 69 insertions(+), 51 deletions(-)
  create mode 100644 arch/mips/mm/page-funcs.S
 
-diff --git a/arch/mips/mm/Makefile b/arch/mips/mm/Makefile
-index 4aa2028..fd6203f 100644
 --- a/arch/mips/mm/Makefile
 +++ b/arch/mips/mm/Makefile
 @@ -3,8 +3,8 @@
@@ -42,9 +40,6 @@ index 4aa2028..fd6203f 100644
  
  obj-$(CONFIG_32BIT)		+= ioremap.o pgtable-32.o
  obj-$(CONFIG_64BIT)		+= pgtable-64.o
-diff --git a/arch/mips/mm/page-funcs.S b/arch/mips/mm/page-funcs.S
-new file mode 100644
-index 0000000..901c2bc
 --- /dev/null
 +++ b/arch/mips/mm/page-funcs.S
 @@ -0,0 +1,49 @@
@@ -97,8 +92,6 @@ index 0000000..901c2bc
 +	.space 1344
 +END(copy_page)
 +EXPORT(__copy_page_end)
-diff --git a/arch/mips/mm/page.c b/arch/mips/mm/page.c
-index cc0b626..98f530e 100644
 --- a/arch/mips/mm/page.c
 +++ b/arch/mips/mm/page.c
 @@ -6,6 +6,7 @@
@@ -109,7 +102,7 @@ index cc0b626..98f530e 100644
   */
  #include <linux/init.h>
  #include <linux/kernel.h>
-@@ -71,45 +72,6 @@ static struct uasm_reloc __cpuinitdata relocs[5];
+@@ -72,45 +73,6 @@ static struct uasm_reloc __cpuinitdata r
  #define cpu_is_r4600_v1_x()	((read_c0_prid() & 0xfffffff0) == 0x00002010)
  #define cpu_is_r4600_v2_x()	((read_c0_prid() & 0xfffffff0) == 0x00002020)
  
@@ -155,7 +148,7 @@ index cc0b626..98f530e 100644
  static int pref_bias_clear_store __cpuinitdata;
  static int pref_bias_copy_load __cpuinitdata;
  static int pref_bias_copy_store __cpuinitdata;
-@@ -282,10 +244,15 @@ static inline void __cpuinit build_clear_pref(u32 **buf, int off)
+@@ -283,10 +245,15 @@ static inline void __cpuinit build_clear
  		}
  }
  
@@ -172,7 +165,7 @@ index cc0b626..98f530e 100644
  	struct uasm_label *l = labels;
  	struct uasm_reloc *r = relocs;
  	int i;
-@@ -356,17 +323,17 @@ void __cpuinit build_clear_page(void)
+@@ -357,17 +324,17 @@ void __cpuinit build_clear_page(void)
  	uasm_i_jr(&buf, RA);
  	uasm_i_nop(&buf);
  
@@ -194,7 +187,7 @@ index cc0b626..98f530e 100644
  	pr_debug("\t.set pop\n");
  }
  
-@@ -427,7 +394,7 @@ static inline void build_copy_store_pref(u32 **buf, int off)
+@@ -428,7 +395,7 @@ static inline void build_copy_store_pref
  void __cpuinit build_copy_page(void)
  {
  	int off;
@@ -203,7 +196,7 @@ index cc0b626..98f530e 100644
  	struct uasm_label *l = labels;
  	struct uasm_reloc *r = relocs;
  	int i;
-@@ -595,21 +562,23 @@ void __cpuinit build_copy_page(void)
+@@ -596,21 +563,23 @@ void __cpuinit build_copy_page(void)
  	uasm_i_jr(&buf, RA);
  	uasm_i_nop(&buf);
  

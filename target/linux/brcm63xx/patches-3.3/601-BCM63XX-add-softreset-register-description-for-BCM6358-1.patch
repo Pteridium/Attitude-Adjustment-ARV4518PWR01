@@ -1,6 +1,5 @@
-diff -urN a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
---- a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h	2013-12-03 11:15:54.000000000 +0100
-+++ b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h	2013-12-03 11:34:22.712858577 +0100
+--- a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
++++ b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_regs.h
 @@ -227,6 +227,7 @@
  /* Soft Reset register */
  #define PERF_SOFTRESET_REG		0x28

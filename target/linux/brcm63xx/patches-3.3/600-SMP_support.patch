@@ -1,7 +1,6 @@
-diff -urN a/arch/mips/bcm63xx/irq.c b/arch/mips/bcm63xx/irq.c
---- a/arch/mips/bcm63xx/irq.c	2013-11-24 13:24:15.000000000 +0100
-+++ b/arch/mips/bcm63xx/irq.c	2013-11-25 19:05:05.130551827 +0100
-@@ -291,6 +291,10 @@
+--- a/arch/mips/bcm63xx/irq.c
++++ b/arch/mips/bcm63xx/irq.c
+@@ -291,6 +291,10 @@ asmlinkage void plat_irq_dispatch(void)
  
  		if (cause & CAUSEF_IP7)
  			do_IRQ(7);
@@ -12,18 +11,16 @@ diff -urN a/arch/mips/bcm63xx/irq.c b/arch/mips/bcm63xx/irq.c
  		if (cause & CAUSEF_IP2)
  			dispatch_internal();
  		if (!is_ext_irq_cascaded) {
-diff -urN a/arch/mips/bcm63xx/Makefile b/arch/mips/bcm63xx/Makefile
---- a/arch/mips/bcm63xx/Makefile	2013-11-24 13:24:16.000000000 +0100
-+++ b/arch/mips/bcm63xx/Makefile	2013-11-25 19:08:46.239137977 +0100
+--- a/arch/mips/bcm63xx/Makefile
++++ b/arch/mips/bcm63xx/Makefile
 @@ -1,4 +1,4 @@
 -obj-y		+= clk.o cpu.o cs.o gpio.o irq.o nvram.o prom.o setup.o \
 +obj-y		+= clk.o cpu.o cs.o gpio.o irq.o nvram.o prom.o reset.o setup.o \
  		   timer.o dev-dsp.o dev-enet.o dev-flash.o dev-hsspi.o \
  		   dev-pcmcia.o dev-rng.o dev-spi.o dev-uart.o dev-usb-ehci.o \
  		   dev-usb-ohci.o dev-wdt.o pci-ath9k-fixup.o
-diff -urN a/arch/mips/bcm63xx/prom.c b/arch/mips/bcm63xx/prom.c
---- a/arch/mips/bcm63xx/prom.c	2013-11-24 13:24:15.000000000 +0100
-+++ b/arch/mips/bcm63xx/prom.c	2013-11-25 19:02:47.342185323 +0100
+--- a/arch/mips/bcm63xx/prom.c
++++ b/arch/mips/bcm63xx/prom.c
 @@ -8,7 +8,11 @@
  
  #include <linux/init.h>
@@ -36,7 +33,7 @@ diff -urN a/arch/mips/bcm63xx/prom.c b/arch/mips/bcm63xx/prom.c
  #include <bcm63xx_board.h>
  #include <bcm63xx_cpu.h>
  #include <bcm63xx_io.h>
-@@ -52,6 +56,43 @@
+@@ -52,6 +56,43 @@ void __init prom_init(void)
  
  	/* do low level board init */
  	board_prom_init();
@@ -80,9 +77,8 @@ diff -urN a/arch/mips/bcm63xx/prom.c b/arch/mips/bcm63xx/prom.c
  }
  
  void __init prom_free_prom_memory(void)
-diff -urN a/arch/mips/bcm63xx/reset.c b/arch/mips/bcm63xx/reset.c
---- a/arch/mips/bcm63xx/reset.c	1970-01-01 01:00:00.000000000 +0100
-+++ b/arch/mips/bcm63xx/reset.c	2013-11-25 19:12:24.251713617 +0100
+--- /dev/null
++++ b/arch/mips/bcm63xx/reset.c
 @@ -0,0 +1,223 @@
 +/*
 + * This file is subject to the terms and conditions of the GNU General Public
@@ -307,9 +303,8 @@ diff -urN a/arch/mips/bcm63xx/reset.c b/arch/mips/bcm63xx/reset.c
 +EXPORT_SYMBOL(bcm63xx_core_set_reset);
 +
 +postcore_initcall(bcm63xx_reset_bits_init);
-diff -urN a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_reset.h b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_reset.h
---- a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_reset.h	1970-01-01 01:00:00.000000000 +0100
-+++ b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_reset.h	2013-11-25 19:13:57.579959370 +0100
+--- /dev/null
++++ b/arch/mips/include/asm/mach-bcm63xx/bcm63xx_reset.h
 @@ -0,0 +1,21 @@
 +#ifndef __BCM63XX_RESET_H
 +#define __BCM63XX_RESET_H
@@ -332,10 +327,9 @@ diff -urN a/arch/mips/include/asm/mach-bcm63xx/bcm63xx_reset.h b/arch/mips/inclu
 +void bcm63xx_core_set_reset(enum bcm63xx_core_reset, int reset);
 +
 +#endif
-diff -urN a/arch/mips/include/asm/module.h b/arch/mips/include/asm/module.h
---- a/arch/mips/include/asm/module.h	2013-11-24 13:24:10.000000000 +0100
-+++ b/arch/mips/include/asm/module.h	2013-11-25 18:32:32.517304243 +0100
-@@ -127,6 +127,8 @@
+--- a/arch/mips/include/asm/module.h
++++ b/arch/mips/include/asm/module.h
+@@ -127,6 +127,8 @@ search_module_dbetables(unsigned long ad
  #define MODULE_PROC_FAMILY "OCTEON "
  #elif defined CONFIG_CPU_XLR
  #define MODULE_PROC_FAMILY "XLR "
@@ -344,11 +338,10 @@ diff -urN a/arch/mips/include/asm/module.h b/arch/mips/include/asm/module.h
  #elif defined CONFIG_CPU_XLP
  #define MODULE_PROC_FAMILY "XLP "
  #else
-diff -urN a/arch/mips/Kconfig b/arch/mips/Kconfig
---- a/arch/mips/Kconfig	2013-11-24 13:24:14.000000000 +0100
-+++ b/arch/mips/Kconfig	2013-11-25 18:55:34.769028104 +0100
-@@ -112,11 +112,14 @@
- 	select DMA_NONCOHERENT
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -113,11 +113,14 @@ config BCM63XX
+ 	select HW_HAS_PCI
  	select IRQ_CPU
  	select SYS_HAS_CPU_MIPS32_R1
 +	select SYS_HAS_CPU_BMIPS4350 if !BCM63XX_CPU_6338 && !BCM63XX_CPU_6345 && !BCM63XX_CPU_6348
@@ -362,9 +355,8 @@ diff -urN a/arch/mips/Kconfig b/arch/mips/Kconfig
  	help
  	 Support for BCM63XX based boards
  
-diff -urN a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
---- a/arch/mips/kernel/smp-bmips.c	2012-06-01 09:16:13.000000000 +0200
-+++ b/arch/mips/kernel/smp-bmips.c	2013-11-25 18:53:49.356744495 +0100
+--- a/arch/mips/kernel/smp-bmips.c
++++ b/arch/mips/kernel/smp-bmips.c
 @@ -15,7 +15,6 @@
  #include <linux/smp.h>
  #include <linux/interrupt.h>
@@ -373,7 +365,7 @@ diff -urN a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
  #include <linux/cpu.h>
  #include <linux/cpumask.h>
  #include <linux/reboot.h>
-@@ -65,7 +64,7 @@
+@@ -65,7 +64,7 @@ static irqreturn_t bmips_ipi_interrupt(i
  
  static void __init bmips_smp_setup(void)
  {
@@ -382,7 +374,7 @@ diff -urN a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
  
  #if defined(CONFIG_CPU_BMIPS4350) || defined(CONFIG_CPU_BMIPS4380)
  	/* arbitration priority */
-@@ -74,13 +73,22 @@
+@@ -74,13 +73,22 @@ static void __init bmips_smp_setup(void)
  	/* NBK and weak order flags */
  	set_c0_brcm_config_0(0x30000);
  
@@ -407,7 +399,7 @@ diff -urN a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
  
  	/* single core, 2 threads (2 pipelines) */
  	max_cpus = 2;
-@@ -108,9 +116,15 @@
+@@ -108,9 +116,15 @@ static void __init bmips_smp_setup(void)
  	if (!board_ebase_setup)
  		board_ebase_setup = &bmips_ebase_setup;
  
@@ -425,7 +417,7 @@ diff -urN a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
  		set_cpu_possible(i, 1);
  		set_cpu_present(i, 1);
  	}
-@@ -159,7 +173,9 @@
+@@ -159,7 +173,9 @@ static void bmips_boot_secondary(int cpu
  		bmips_send_ipi_single(cpu, 0);
  	else {
  #if defined(CONFIG_CPU_BMIPS4350) || defined(CONFIG_CPU_BMIPS4380)
@@ -436,7 +428,7 @@ diff -urN a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
  #elif defined(CONFIG_CPU_BMIPS5000)
  		if (cpu & 0x01)
  			write_c0_brcm_action(ACTION_BOOT_THREAD(cpu));
-@@ -198,13 +214,6 @@
+@@ -198,13 +214,6 @@ static void bmips_init_secondary(void)
  
  	write_c0_brcm_action(ACTION_CLR_IPI(smp_processor_id(), 0));
  #endif
@@ -450,7 +442,7 @@ diff -urN a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
  }
  
  /*
-@@ -213,6 +222,13 @@
+@@ -213,6 +222,13 @@ static void bmips_init_secondary(void)
  static void bmips_smp_finish(void)
  {
  	pr_info("SMP: CPU%d is running\n", smp_processor_id());
