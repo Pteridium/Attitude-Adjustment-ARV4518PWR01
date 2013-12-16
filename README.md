@@ -1,8 +1,26 @@
 Attitude Adjustment r38863
 
-Highlights: 
+Highlights:
+
+Lantiq:
 - Added support for ARV4518PWR01.
 - Wifi in ARV4518PW* and ARV7518PW is modified to work without regional restrictions.
+
+BCM63xx:
+- Added SMP support.
+- Added B53 driver.
+- Added Comtrend VR-3025u and VR-3025un.
+- Added Huawei HG622.
+
+Toolchain:
+- Added GCC 4.8.0 and 4.8.3-linaro versions.
+
+Packages:
+- Added cpuminer.
+
+TODO:
+- A lot of stuff.
+
 
 ---------------------------------------------------------------------------------------
 
