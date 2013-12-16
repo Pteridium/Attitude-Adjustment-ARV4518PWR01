@@ -86,6 +86,11 @@ brcm63xx_detect() {
 		brcm63xx_has_reset_button="true"
 		ifname=eth0
 		;;
+	96368MVWG_hg622)
+		brcm63xx_has_reset_button="true"
+		status_led="HG622:green:power"
+		ifname=eth0
+		;;
 	VR-3025un)
 		brcm63xx_has_reset_button="true"
 		status_led="VR-3025un:green:power"

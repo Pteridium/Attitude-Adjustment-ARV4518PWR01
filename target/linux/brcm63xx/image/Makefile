@@ -268,6 +268,8 @@ endif
 	# Comtrend VR-3025u
 	$(call Image/Build/CFE,$(1),96368M-1541N,6368,VR-3025u,,--pad 16)
 
+	# Huawei HG622
+	$(call Image/Build/CFE,$(1),96368MVWG_hg622,6368,HG622,,--pad 4)
 endef
 
 $(eval $(call BuildImage))
