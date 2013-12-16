@@ -1,15 +1,15 @@
 --- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
 +++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
-@@ -15,6 +15,8 @@
- #include <linux/gpio_keys.h>
+@@ -16,6 +16,8 @@
  #include <linux/input.h>
+ #include <linux/export.h>
  #include <linux/spi/spi.h>
 +#include <linux/spi/spi_gpio.h>
 +#include <linux/spi/74x164.h>
  #include <asm/addrspace.h>
  #include <bcm63xx_board.h>
  #include <bcm63xx_cpu.h>
-@@ -43,6 +45,12 @@
+@@ -44,6 +46,12 @@
  #define CFE_OFFSET_64K		0x10000
  #define CFE_OFFSET_128K		0x20000
  
@@ -22,7 +22,7 @@
  static struct board_info board;
  
  /*
-@@ -666,6 +674,586 @@ static struct board_info __initdata boar
+@@ -667,6 +675,586 @@ static struct board_info __initdata boar
  
  	.has_ohci0			= 1,
  };
@@ -609,7 +609,7 @@
  #endif
  
  /*
-@@ -696,6 +1284,11 @@ static const struct board_info __initdat
+@@ -697,6 +1285,11 @@ static const struct board_info __initdat
  	&board_96358vw2,
  	&board_AGPFS0,
  	&board_DWVS0,
@@ -621,7 +621,7 @@
  #endif
  };
  
-@@ -750,6 +1343,16 @@ static void __init boardid_fixup(u8 *boo
+@@ -752,6 +1345,16 @@ static void __init boardid_fixup(u8 *boo
  	struct bcm_tag *tag = (struct bcm_tag *)(boot_addr + CFE_OFFSET_64K);
  	char *board_name = (char *)bcm63xx_nvram_get_name();
  

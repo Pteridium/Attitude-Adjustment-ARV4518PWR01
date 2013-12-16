@@ -1,7 +1,6 @@
-diff -urN a/drivers/gpio/devres.c b/drivers/gpio/devres.c
---- a/drivers/gpio/devres.c	2012-06-01 09:16:13.000000000 +0200
-+++ b/drivers/gpio/devres.c	2013-12-08 15:47:43.035505797 +0100
-@@ -71,6 +71,36 @@
+--- a/drivers/gpio/devres.c
++++ b/drivers/gpio/devres.c
+@@ -71,6 +71,36 @@ int devm_gpio_request(struct device *dev
  EXPORT_SYMBOL(devm_gpio_request);
  
  /**
@@ -38,10 +37,9 @@ diff -urN a/drivers/gpio/devres.c b/drivers/gpio/devres.c
   *      devm_gpio_free - free an interrupt
   *      @dev: device to free gpio for
   *      @gpio: gpio to free
-diff -urN a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
---- a/include/asm-generic/gpio.h	2013-12-08 15:48:41.127656416 +0100
-+++ b/include/asm-generic/gpio.h	2013-12-08 15:42:20.000000000 +0100
-@@ -179,6 +179,8 @@
+--- a/include/asm-generic/gpio.h
++++ b/include/asm-generic/gpio.h
+@@ -179,6 +179,8 @@ extern void gpio_free_array(const struct
  
  /* bindings for managed devices that want to request gpios */
  int devm_gpio_request(struct device *dev, unsigned gpio, const char *label);

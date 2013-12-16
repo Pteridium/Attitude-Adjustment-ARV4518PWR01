@@ -1,6 +1,5 @@
-diff -urN a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
---- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c	2013-12-07 19:38:35.000000000 +0100
-+++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c	2013-12-07 20:16:19.384587429 +0100
+--- a/drivers/net/ethernet/broadcom/bcm63xx_enet.c
++++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.c
 @@ -30,6 +30,7 @@
  #include <linux/dma-mapping.h>
  #include <linux/platform_device.h>
@@ -9,7 +8,7 @@ diff -urN a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/
  
  #include <bcm63xx_dev_enet.h>
  #include "bcm63xx_enet.h"
-@@ -1977,7 +1978,7 @@
+@@ -1977,7 +1978,7 @@ static int __devexit bcm_enet_remove(str
  	return 0;
  }
  
@@ -18,7 +17,7 @@ diff -urN a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/
  	.probe	= bcm_enet_probe,
  	.remove	= __devexit_p(bcm_enet_remove),
  	.driver	= {
-@@ -1986,6 +1987,42 @@
+@@ -1986,6 +1987,42 @@ struct platform_driver bcm63xx_enet_driv
  	},
  };
  
@@ -61,7 +60,7 @@ diff -urN a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/
  /*
   * switch mii access callbacks
   */
-@@ -2234,29 +2271,6 @@
+@@ -2234,29 +2271,6 @@ static int bcm_enetsw_open(struct net_de
  		enetsw_writeb(priv, rgmii_ctrl, ENETSW_RGMII_CTRL_REG(i));
  	}
  
@@ -91,7 +90,7 @@ diff -urN a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/
  	/* initialize flow control buffer allocation */
  	enet_dma_writel(priv, ENETDMA_BUFALLOC_FORCE_MASK | 0,
  			ENETDMA_BUFALLOC_REG(priv->rx_chan));
-@@ -2724,6 +2738,9 @@
+@@ -2724,6 +2738,9 @@ static int __devinit bcm_enetsw_probe(st
  	struct bcm63xx_enetsw_platform_data *pd;
  	struct resource *res_mem;
  	int ret, irq_rx, irq_tx;
@@ -101,7 +100,7 @@ diff -urN a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/
  
  	/* stop if shared driver failed, assume driver->probe will be
  	 * called in the same order we register devices (correct ?) */
-@@ -2808,6 +2825,43 @@
+@@ -2808,6 +2825,43 @@ static int __devinit bcm_enetsw_probe(st
  	priv->pdev = pdev;
  	priv->net_dev = dev;
  
@@ -145,7 +144,7 @@ diff -urN a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/
  	return 0;
  
  out_put_clk:
-@@ -2838,6 +2892,9 @@
+@@ -2838,6 +2892,9 @@ static int __devexit bcm_enetsw_remove(s
  	priv = netdev_priv(dev);
  	unregister_netdev(dev);
  
@@ -155,10 +154,9 @@ diff -urN a/drivers/net/ethernet/broadcom/bcm63xx_enet.c b/drivers/net/ethernet/
  	/* release device resources */
  	iounmap(priv->base);
  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-diff -urN a/drivers/net/ethernet/broadcom/bcm63xx_enet.h b/drivers/net/ethernet/broadcom/bcm63xx_enet.h
---- a/drivers/net/ethernet/broadcom/bcm63xx_enet.h	2013-12-07 19:38:35.000000000 +0100
-+++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.h	2013-12-07 20:00:42.541799493 +0100
-@@ -364,6 +364,9 @@
+--- a/drivers/net/ethernet/broadcom/bcm63xx_enet.h
++++ b/drivers/net/ethernet/broadcom/bcm63xx_enet.h
+@@ -364,6 +364,9 @@ struct bcm_enet_priv {
  	struct bcm63xx_enetsw_port used_ports[ENETSW_MAX_PORT];
  	int sw_port_link[ENETSW_MAX_PORT];
  

@@ -1,7 +1,6 @@
-diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
---- a/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-09 22:02:10.997164639 +0100
-+++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-09 22:06:03.897660332 +0100
-@@ -2933,6 +2933,158 @@
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+@@ -2933,6 +2933,158 @@ static struct board_info __initdata boar
  	.has_ohci0 = 1,
  	.has_ehci0 = 1,
  };
@@ -160,7 +159,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  #endif
  
  /*
-@@ -3000,6 +3152,8 @@
+@@ -3000,6 +3152,8 @@ static const struct board_info __initdat
  #ifdef CONFIG_BCM63XX_CPU_6368
  	&board_96368mvwg,
  	&board_96368mvngr,

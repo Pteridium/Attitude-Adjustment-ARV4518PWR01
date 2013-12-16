@@ -1,7 +1,6 @@
-diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
---- a/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-09 22:09:21.394084708 +0100
-+++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-09 22:20:00.451481155 +0100
-@@ -322,6 +322,8 @@
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+@@ -322,6 +322,8 @@ static struct board_info __initdata boar
  	.has_uart0			= 1,
  	.has_enet0			= 1,
  	.enet0 = {
@@ -10,7 +9,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -365,6 +367,8 @@
+@@ -365,6 +367,8 @@ static struct board_info __initdata boar
  	.has_uart0			= 1,
  	.has_enet0			= 1,
  	.enet0 = {
@@ -19,7 +18,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -406,6 +410,8 @@
+@@ -406,6 +410,8 @@ static struct board_info __initdata boar
  	.has_enet0			= 1,
  
  	.enet0 = {
@@ -28,7 +27,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -439,6 +445,8 @@
+@@ -439,6 +445,8 @@ static struct board_info __initdata boar
  	.has_enet0			= 1,
  
  	.enet0 = {
@@ -37,7 +36,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -543,6 +551,8 @@
+@@ -543,6 +551,8 @@ static struct board_info __initdata boar
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -46,7 +45,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -615,6 +625,8 @@
+@@ -615,6 +625,8 @@ static struct board_info __initdata boar
  	},
  
  	.enet1 = {
@@ -55,7 +54,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -675,6 +687,8 @@
+@@ -675,6 +687,8 @@ static struct board_info __initdata boar
  	.has_pci			= 1,
  
  	.enet1 = {
@@ -64,7 +63,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -730,6 +744,8 @@
+@@ -730,6 +744,8 @@ static struct board_info __initdata boar
  	.has_pci			= 1,
  
  	.enet1 = {
@@ -73,7 +72,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -772,6 +788,8 @@
+@@ -772,6 +788,8 @@ static struct board_info __initdata boar
  	.has_pci			= 1,
  
  	.enet1 = {
@@ -82,7 +81,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -838,6 +856,8 @@
+@@ -838,6 +856,8 @@ static struct board_info __initdata boar
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -91,7 +90,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -906,6 +926,8 @@
+@@ -906,6 +926,8 @@ static struct board_info __initdata boar
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -100,7 +99,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -968,6 +990,8 @@
+@@ -968,6 +990,8 @@ static struct board_info __initdata boar
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -109,7 +108,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1013,6 +1037,8 @@
+@@ -1013,6 +1037,8 @@ static struct board_info __initdata boar
  	},
  
  	.enet1 = {
@@ -118,7 +117,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1036,6 +1062,8 @@
+@@ -1036,6 +1062,8 @@ static struct board_info __initdata boar
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -127,7 +126,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1057,6 +1085,8 @@
+@@ -1057,6 +1085,8 @@ static struct board_info __initdata boar
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -136,7 +135,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1076,6 +1106,8 @@
+@@ -1076,6 +1106,8 @@ static struct board_info __initdata boar
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -145,7 +144,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1105,6 +1137,8 @@
+@@ -1105,6 +1137,8 @@ static struct board_info __initdata boar
  	.has_uart0 			= 1,
  
  	.enet1 = {
@@ -154,7 +153,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1220,6 +1254,8 @@
+@@ -1220,6 +1254,8 @@ static struct board_info __initdata boar
  	},
  	.enet1 = {
  		/* it has BP_ENET_EXTERNAL_PHY */
@@ -163,7 +162,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1289,6 +1325,8 @@
+@@ -1289,6 +1325,8 @@ static struct board_info __initdata boar
                  .use_internal_phy       = 1,
          },
          .enet1 = {
@@ -172,7 +171,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
                  .force_speed_100        = 1,
                  .force_duplex_full      = 1,
  	},
-@@ -1346,6 +1384,8 @@
+@@ -1346,6 +1384,8 @@ static struct board_info __initdata boar
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -181,7 +180,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1379,6 +1419,8 @@
+@@ -1379,6 +1419,8 @@ static struct board_info __initdata boar
  	.has_pci			= 1,
  
  	.enet1 = {
@@ -190,7 +189,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1441,6 +1483,8 @@
+@@ -1441,6 +1483,8 @@ static struct board_info __initdata boar
  	},
  
  	.enet1 = {
@@ -199,7 +198,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1493,6 +1537,8 @@
+@@ -1493,6 +1537,8 @@ static struct board_info __initdata boar
  	},
  
  	.enet1 = {
@@ -208,7 +207,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1535,6 +1581,8 @@
+@@ -1535,6 +1581,8 @@ static struct board_info __initdata boar
  	.has_pci                        = 1,
  
  	.enet1 = {
@@ -217,7 +216,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100        = 1,
  		.force_duplex_full      = 1,
   	},
-@@ -1631,6 +1679,8 @@
+@@ -1631,6 +1679,8 @@ static struct board_info __initdata boar
  	},
  
  	.enet1 = {
@@ -226,7 +225,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100        = 1,
  		.force_duplex_full      = 1,
  	},
-@@ -1748,6 +1798,8 @@
+@@ -1748,6 +1798,8 @@ static struct board_info __initdata boar
  	},
  
  	.enet1 = {
@@ -235,7 +234,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1766,6 +1818,8 @@
+@@ -1766,6 +1818,8 @@ static struct board_info __initdata boar
  	.has_pci			= 1,
  
  	.enet1 = {
@@ -244,7 +243,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -2435,6 +2489,8 @@
+@@ -2435,6 +2489,8 @@ static struct board_info __initdata boar
  
  	.has_enet1			= 1,
  	.enet1 = {
@@ -253,7 +252,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -2510,6 +2566,8 @@
+@@ -2510,6 +2566,8 @@ static struct board_info __initdata boar
  	},
  
  	.enet1 = {
@@ -262,7 +261,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100        = 1,
  		.force_duplex_full      = 1,
  	},
-@@ -2578,6 +2636,8 @@
+@@ -2578,6 +2636,8 @@ static struct board_info __initdata boar
  	.has_pci		= 1,
  
  	.enet0 = {
@@ -271,7 +270,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.has_phy 		= 1,
  		.use_internal_phy 	= 1,
  	},
-@@ -2652,6 +2712,8 @@
+@@ -2652,6 +2712,8 @@ static struct board_info __initdata boar
  	},
  
  	.enet1 = {
