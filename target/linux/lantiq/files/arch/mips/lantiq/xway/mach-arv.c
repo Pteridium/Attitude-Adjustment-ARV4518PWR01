@@ -182,7 +182,7 @@ arv4518pw_gpio_keys[] __initdata = {
 		.debounce_interval = LTQ_KEYS_DEBOUNCE_INTERVAL,
 		.gpio		= 30,
 		.active_low	= 1,
-	},*/
+	},
 	{
 		.desc		= "wps",
 		.type		= EV_KEY,
@@ -190,7 +190,7 @@ arv4518pw_gpio_keys[] __initdata = {
 		.debounce_interval = LTQ_KEYS_DEBOUNCE_INTERVAL,
 		.gpio		= 29,
 		.active_low	= 1,
-	},
+	},*/
 };
 
 static struct gpio_led
