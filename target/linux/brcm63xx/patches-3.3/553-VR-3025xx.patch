@@ -1,6 +1,6 @@
 diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
---- a/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-11-24 13:24:17.000000000 +0100
-+++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-11-25 19:41:22.096566721 +0100
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-09 22:02:10.997164639 +0100
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-09 22:06:03.897660332 +0100
 @@ -2933,6 +2933,158 @@
  	.has_ohci0 = 1,
  	.has_ehci0 = 1,
@@ -169,4 +169,3 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  #endif
  };
  
-

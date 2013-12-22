@@ -1,6 +1,6 @@
 diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
---- a/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-07 20:19:31.000000000 +0100
-+++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-07 21:25:41.773302112 +0100
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-09 22:09:21.394084708 +0100
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-09 22:20:00.451481155 +0100
 @@ -322,6 +322,8 @@
  	.has_uart0			= 1,
  	.has_enet0			= 1,
@@ -37,22 +37,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -494,6 +502,8 @@
- 	.has_pci			= 1,
- 
- 	.enet0 = {
-+		.has_phy                = 1,
-+		.phy_id                 = 0,
- 		.has_phy		= 1,
- 		.use_internal_phy	= 1,
- 	},
-@@ -539,10 +549,14 @@
- 	.has_pci			= 1,
- 
- 	.enet0 = {
-+		.has_phy                = 1,
-+		.phy_id                 = 0,
- 		.has_phy		= 1,
+@@ -543,6 +551,8 @@
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -61,7 +46,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -615,6 +629,8 @@
+@@ -615,6 +625,8 @@
  	},
  
  	.enet1 = {
@@ -70,7 +55,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -675,6 +691,8 @@
+@@ -675,6 +687,8 @@
  	.has_pci			= 1,
  
  	.enet1 = {
@@ -79,7 +64,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -730,6 +748,8 @@
+@@ -730,6 +744,8 @@
  	.has_pci			= 1,
  
  	.enet1 = {
@@ -88,7 +73,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -772,6 +792,8 @@
+@@ -772,6 +788,8 @@
  	.has_pci			= 1,
  
  	.enet1 = {
@@ -97,7 +82,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -838,6 +860,8 @@
+@@ -838,6 +856,8 @@
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -106,7 +91,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -906,6 +930,8 @@
+@@ -906,6 +926,8 @@
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -115,7 +100,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -968,6 +994,8 @@
+@@ -968,6 +990,8 @@
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -124,7 +109,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1013,6 +1041,8 @@
+@@ -1013,6 +1037,8 @@
  	},
  
  	.enet1 = {
@@ -133,7 +118,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1036,6 +1066,8 @@
+@@ -1036,6 +1062,8 @@
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -142,7 +127,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1057,6 +1089,8 @@
+@@ -1057,6 +1085,8 @@
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -151,7 +136,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1076,6 +1110,8 @@
+@@ -1076,6 +1106,8 @@
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -160,7 +145,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1105,6 +1141,8 @@
+@@ -1105,6 +1137,8 @@
  	.has_uart0 			= 1,
  
  	.enet1 = {
@@ -169,26 +154,16 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1153,6 +1191,8 @@
- 	.has_pci			= 1,
- 
- 	.enet0 = {
-+		.has_phy                = 1,
-+		.phy_id                 = 0,
- 		.has_phy		= 1,
- 		.use_internal_phy	= 1,
- 	},
-@@ -1219,7 +1259,8 @@
- 		.use_internal_phy	= 1,
+@@ -1220,6 +1254,8 @@
  	},
  	.enet1 = {
--		/* it has BP_ENET_EXTERNAL_PHY */
+ 		/* it has BP_ENET_EXTERNAL_PHY */
 +		.has_phy                = 1,
 +		.phy_id                 = 0,
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1289,6 +1330,8 @@
+@@ -1289,6 +1325,8 @@
                  .use_internal_phy       = 1,
          },
          .enet1 = {
@@ -197,7 +172,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
                  .force_speed_100        = 1,
                  .force_duplex_full      = 1,
  	},
-@@ -1346,6 +1389,8 @@
+@@ -1346,6 +1384,8 @@
  		.use_internal_phy	= 1,
  	},
  	.enet1 = {
@@ -206,7 +181,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1379,6 +1424,8 @@
+@@ -1379,6 +1419,8 @@
  	.has_pci			= 1,
  
  	.enet1 = {
@@ -215,7 +190,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1441,6 +1488,8 @@
+@@ -1441,6 +1483,8 @@
  	},
  
  	.enet1 = {
@@ -224,7 +199,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1493,6 +1542,8 @@
+@@ -1493,6 +1537,8 @@
  	},
  
  	.enet1 = {
@@ -233,7 +208,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1535,6 +1586,8 @@
+@@ -1535,6 +1581,8 @@
  	.has_pci                        = 1,
  
  	.enet1 = {
@@ -242,7 +217,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100        = 1,
  		.force_duplex_full      = 1,
   	},
-@@ -1631,6 +1684,8 @@
+@@ -1631,6 +1679,8 @@
  	},
  
  	.enet1 = {
@@ -251,7 +226,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100        = 1,
  		.force_duplex_full      = 1,
  	},
-@@ -1748,6 +1803,8 @@
+@@ -1748,6 +1798,8 @@
  	},
  
  	.enet1 = {
@@ -260,7 +235,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -1766,6 +1823,8 @@
+@@ -1766,6 +1818,8 @@
  	.has_pci			= 1,
  
  	.enet1 = {
@@ -269,7 +244,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -2435,6 +2494,8 @@
+@@ -2435,6 +2489,8 @@
  
  	.has_enet1			= 1,
  	.enet1 = {
@@ -278,7 +253,7 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100	= 1,
  		.force_duplex_full	= 1,
  	},
-@@ -2510,6 +2571,8 @@
+@@ -2510,6 +2566,8 @@
  	},
  
  	.enet1 = {
@@ -287,7 +262,16 @@ diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards
  		.force_speed_100        = 1,
  		.force_duplex_full      = 1,
  	},
-@@ -2652,6 +2715,8 @@
+@@ -2578,6 +2636,8 @@
+ 	.has_pci		= 1,
+ 
+ 	.enet0 = {
++		.has_phy                = 1,
++		.phy_id                 = 0,
+ 		.has_phy 		= 1,
+ 		.use_internal_phy 	= 1,
+ 	},
+@@ -2652,6 +2712,8 @@
  	},
  
  	.enet1 = {

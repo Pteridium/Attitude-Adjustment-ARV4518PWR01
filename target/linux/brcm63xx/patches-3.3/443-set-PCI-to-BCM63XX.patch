@@ -1,7 +1,6 @@
-diff -urN a/arch/mips/bcm63xx/Kconfig b/arch/mips/bcm63xx/Kconfig
---- a/arch/mips/bcm63xx/Kconfig	2013-12-03 16:09:08.000000000 +0100
-+++ b/arch/mips/bcm63xx/Kconfig	2013-12-06 09:22:32.748828421 +0100
-@@ -3,11 +3,9 @@
+--- a/arch/mips/bcm63xx/Kconfig
++++ b/arch/mips/bcm63xx/Kconfig
+@@ -3,11 +3,9 @@ menu "CPU support"
  
  config BCM63XX_CPU_6328
  	bool "support 6328 CPU"
@@ -13,7 +12,7 @@ diff -urN a/arch/mips/bcm63xx/Kconfig b/arch/mips/bcm63xx/Kconfig
  	select USB_ARCH_HAS_OHCI if USB_SUPPORT
  
  config BCM63XX_CPU_6345
-@@ -15,24 +13,20 @@
+@@ -15,24 +13,20 @@ config BCM63XX_CPU_6345
  
  config BCM63XX_CPU_6348
  	bool "support 6348 CPU"
@@ -38,14 +37,13 @@ diff -urN a/arch/mips/bcm63xx/Kconfig b/arch/mips/bcm63xx/Kconfig
  	select USB_ARCH_HAS_OHCI if USB_SUPPORT
  	select USB_ARCH_HAS_EHCI if USB_SUPPORT
  endmenu
-diff -urN a/arch/mips/Kconfig b/arch/mips/Kconfig
---- a/arch/mips/Kconfig	2013-12-06 09:30:04.156970496 +0100
-+++ b/arch/mips/Kconfig	2013-12-05 17:34:06.000000000 +0100
-@@ -110,6 +110,7 @@
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -110,6 +110,7 @@ config BCM63XX
  	select CEVT_R4K
  	select CSRC_R4K
  	select DMA_NONCOHERENT
 +	select HW_HAS_PCI
  	select IRQ_CPU
  	select SYS_HAS_CPU_MIPS32_R1
- 	select SYS_HAS_CPU_BMIPS4350 if !BCM63XX_CPU_6338 && !BCM63XX_CPU_6345 && !BCM63XX_CPU_6348
+ 	select SYS_SUPPORTS_32BIT_KERNEL
