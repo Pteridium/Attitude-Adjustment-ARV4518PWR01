@@ -95,6 +95,13 @@ NB6)
         ucidef_add_switch_vlan "switch0" "2" "0 9t"
 	;;
 
+96369R-1231N)
+        ucidef_set_interfaces_lan_wan "eth0.1" "eth0.2"
+        ucidef_add_switch "eth0" "1" "1"
+        ucidef_add_switch_vlan "eth0" "1" "0 1 2 3 5t"
+        ucidef_add_switch_vlan "eth0" "2" "4 5t"
+        ;;
+
 *)
 	ucidef_set_interfaces_lan_wan "eth1" "eth0"
 	;;

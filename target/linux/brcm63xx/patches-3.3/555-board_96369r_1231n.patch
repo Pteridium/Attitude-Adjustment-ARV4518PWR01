@@ -1,0 +1,259 @@
+diff -urN a/arch/mips/bcm63xx/boards/board_bcm963xx.c b/arch/mips/bcm63xx/boards/board_bcm963xx.c
+--- a/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-09 22:21:48.783721132 +0100
++++ b/arch/mips/bcm63xx/boards/board_bcm963xx.c	2013-12-09 22:37:50.249817230 +0100
+@@ -14,6 +14,7 @@
+ #include <linux/ssb/ssb.h>
+ #include <linux/gpio_keys.h>
+ #include <linux/input.h>
++#include <linux/platform_data/b53.h>
+ #include <linux/export.h>
+ #include <linux/spi/spi.h>
+ #include <linux/spi/spi_gpio.h>
+@@ -3147,6 +3148,104 @@
+ 	.has_ohci0 = 1,
+ 	.has_ehci0 = 1,
+ };
++
++static struct b53_platform_data WAP5813n_b53_pdata = {
++	.alias		= "eth0",
++};
++
++static struct spi_board_info WAP5813n_spi_devices[] = {
++	{
++		.modalias = "b53-switch",
++		.max_speed_hz = 781000,
++		.bus_num = 0,
++		.chip_select = 0,
++		.platform_data = &WAP5813n_b53_pdata,
++	}
++};
++
++static struct board_info __initdata board_WAP5813n = {
++	.name						= "96369R-1231N",
++	.expected_cpu_id				= 0x6368,
++
++	.has_uart0					= 1,
++	.has_pci					= 1,
++	.has_ohci0					= 1,
++	.has_ehci0					= 1,
++
++	.has_enetsw					= 1,
++	.enetsw = {
++		.used_ports = {
++			[4] = {
++				.used	= 1,
++				.phy_id	= 0xff,
++				.bypass_link = 1,
++				.force_speed = 1000,
++				.force_duplex_full = 1,
++				.name	= "RGMII",
++			},
++		},
++	},
++
++	.leds = {
++		{
++			.name				= "WAP-5813n:green:power",
++			.gpio				= 22,
++			.default_trigger		= "default-on",
++		},
++		{
++			.name				= "WAP-5813n:red:power",
++			.gpio				= 24,
++		},
++		{
++			.name				= "WAP-5813n:green:inet",
++			.gpio				= 5,
++		},
++		{
++			.name				= "WAP-5813n:red:inet",
++			.gpio				= 31,
++		},
++		{
++			.name				= "WAP-5813n:green:wps",
++			.gpio				= 23,
++			.active_low			= 1,
++		},
++		{
++			.name				= "WAP-5813n:none:aux",
++			.gpio				= 14,
++			.active_low			= 1,
++		},
++	},
++
++	.buttons = {
++		{
++			.desc				= "wlan",
++			.gpio				= 32,
++			.active_low			= 1,
++			.type				= EV_KEY,
++			.code				= KEY_WLAN,
++			.debounce_interval		= BCM963XX_KEYS_DEBOUNCE_INTERVAL,
++		},
++		{
++			.desc				= "reset",
++			.gpio				= 34,
++			.active_low			= 1,
++			.type				= EV_KEY,
++			.code				= KEY_RESTART,
++			.debounce_interval		= BCM963XX_KEYS_DEBOUNCE_INTERVAL,
++		},
++		{
++			.desc				= "wps",
++			.gpio				= 35,
++			.active_low			= 1,
++			.type				= EV_KEY,
++			.code				= KEY_WPS_BUTTON,
++			.debounce_interval		= BCM963XX_KEYS_DEBOUNCE_INTERVAL,
++		},
++	},
++
++	.spis = WAP5813n_spi_devices,
++	.num_spis = ARRAY_SIZE(WAP5813n_spi_devices),
++};
+ #endif
+ 
+ /*
+@@ -3216,6 +3315,7 @@
+ 	&board_96368mvngr,
+ 	&board_VR3025u,
+ 	&board_VR3025un,
++	&board_WAP5813n,
+ #endif
+ };
+ 
+diff -urN a/arch/mips/bcm63xx/cpu.c b/arch/mips/bcm63xx/cpu.c
+--- a/arch/mips/bcm63xx/cpu.c	2013-12-09 21:54:19.000000000 +0100
++++ b/arch/mips/bcm63xx/cpu.c	2013-12-10 10:54:05.229012219 +0100
+@@ -285,57 +285,30 @@
+ 
+ void __init bcm63xx_cpu_init(void)
+ {
+-	unsigned int tmp, expected_cpu_id;
++	unsigned int tmp;
+ 	struct cpuinfo_mips *c = &current_cpu_data;
+ 	unsigned int cpu = smp_processor_id();
++	u32 chipid_reg;
+ 
+ 	/* soc registers location depends on cpu type */
+-	expected_cpu_id = 0;
++	chipid_reg = 0;
+ 
+ 	switch (c->cputype) {
+ 	case CPU_BMIPS3300:
+-		if ((read_c0_prid() & 0xff00) == PRID_IMP_BMIPS3300_ALT) {
+-			expected_cpu_id = BCM6348_CPU_ID;
+-			bcm63xx_regs_base = bcm6348_regs_base;
+-			bcm63xx_irqs = bcm6348_irqs;
+-		} else {
++		if ((read_c0_prid() & 0xff00) != PRID_IMP_BMIPS3300_ALT)
+ 			__cpu_name[cpu] = "Broadcom BCM6338";
+-			expected_cpu_id = BCM6338_CPU_ID;
+-			bcm63xx_regs_base = bcm6338_regs_base;
+-			bcm63xx_irqs = bcm6338_irqs;
+-		}
+-		break;
++		/* fall-through */
+ 	case CPU_BMIPS32:
+-		expected_cpu_id = BCM6345_CPU_ID;
+-		bcm63xx_regs_base = bcm6345_regs_base;
+-		bcm63xx_irqs = bcm6345_irqs;
++		chipid_reg = BCM_6345_PERF_BASE;
+ 		break;
+ 	case CPU_BMIPS4350:
+-		if ((read_c0_prid() & 0xf0) == 0x10) {
+-			expected_cpu_id = BCM6358_CPU_ID;
+-			bcm63xx_regs_base = bcm6358_regs_base;
+-			bcm63xx_irqs = bcm6358_irqs;
+-		} else {
+-			/* all newer chips have the same chip id location */
+-			u16 chip_id = bcm_readw(BCM_6368_PERF_BASE);
+-
+-			switch (chip_id) {
+-			case BCM6328_CPU_ID:
+-				expected_cpu_id = BCM6328_CPU_ID;
+-				bcm63xx_regs_base = bcm6328_regs_base;
+-				bcm63xx_irqs = bcm6328_irqs;
+-				break;
+-			case BCM6362_CPU_ID:
+-				expected_cpu_id = BCM6362_CPU_ID;
+-				bcm63xx_regs_base = bcm6362_regs_base;
+-				bcm63xx_irqs = bcm6362_irqs;
+-				break;
+-			case BCM6368_CPU_ID:
+-				expected_cpu_id = BCM6368_CPU_ID;
+-				bcm63xx_regs_base = bcm6368_regs_base;
+-				bcm63xx_irqs = bcm6368_irqs;
+-				break;
+-			}
++		switch ((read_c0_prid() & 0xff)) {
++		case 0x10:
++			chipid_reg = BCM_6345_PERF_BASE;
++			break;
++		default:
++			chipid_reg = BCM_6368_PERF_BASE;
++			break;
+ 		}
+ 		break;
+ 	}
+@@ -344,20 +317,51 @@
+ 	 * really early to panic, but delaying panic would not help since we
+ 	 * will never get any working console
+ 	 */
+-	if (!expected_cpu_id)
++	if (!chipid_reg)
+ 		panic("unsupported Broadcom CPU");
+ 
+-	/*
+-	 * bcm63xx_regs_base is set, we can access soc registers
+-	 */
+-
+-	/* double check CPU type */
+-	tmp = bcm_perf_readl(PERF_REV_REG);
++	/* read out CPU type */
++	tmp = bcm_readl(chipid_reg);
+ 	bcm63xx_cpu_id = (tmp & REV_CHIPID_MASK) >> REV_CHIPID_SHIFT;
+ 	bcm63xx_cpu_rev = (tmp & REV_REVID_MASK) >> REV_REVID_SHIFT;
+ 
+-	if (bcm63xx_cpu_id != expected_cpu_id)
+-		panic("bcm63xx CPU id mismatch");
++	/* Properly detect certain CPUs */
++	if (bcm63xx_cpu_id != BCM6345_CPU_ID)
++		bcm63xx_cpu_id &= ~1;
++
++	switch (bcm63xx_cpu_id) {
++	case BCM6328_CPU_ID:
++		bcm63xx_regs_base = bcm6328_regs_base;
++		bcm63xx_irqs = bcm6328_irqs;
++		break;
++	case BCM6338_CPU_ID:
++		bcm63xx_regs_base = bcm6338_regs_base;
++		bcm63xx_irqs = bcm6338_irqs;
++		break;
++	case BCM6345_CPU_ID:
++		bcm63xx_regs_base = bcm6345_regs_base;
++		bcm63xx_irqs = bcm6345_irqs;
++		break;
++	case BCM6348_CPU_ID:
++		bcm63xx_regs_base = bcm6348_regs_base;
++		bcm63xx_irqs = bcm6348_irqs;
++		break;
++	case BCM6358_CPU_ID:
++		bcm63xx_regs_base = bcm6358_regs_base;
++		bcm63xx_irqs = bcm6358_irqs;
++		break;
++	case BCM6362_CPU_ID:
++		bcm63xx_regs_base = bcm6362_regs_base;
++		bcm63xx_irqs = bcm6362_irqs;
++		break;
++	case BCM6368_CPU_ID:
++		bcm63xx_regs_base = bcm6368_regs_base;
++		bcm63xx_irqs = bcm6368_irqs;
++		break;
++	default:
++		panic("unsupported broadcom CPU %x", bcm63xx_cpu_id);
++		break;
++	}
+ 
+ 	bcm63xx_cpu_freq = detect_cpu_clock();
+ 	bcm63xx_memory_size = detect_memory_size();

@@ -96,6 +96,11 @@ brcm63xx_detect() {
 		status_led="VR-3025u:green:power"
 		ifname=eth0
 		;;
+	96369R-1231N)
+		brcm63xx_has_reset_button="true"
+		status_led="WAP-5813n:green:power"
+		ifname=eth0
+		;;
 	*)
 		;;
 	esac
